@@ -1,11 +1,16 @@
+use std::io::Read;
 #[allow(unused_variables)]
 fn read_version(transaction_hex: &str) -> u32 {
     //Decode hex to binary
     let transaction_bytes = hex::decode(transaction_hex).unwrap();
-    //Get the first 4 bytes from version and converter the slice in the array
-    let version_bytes: [u8; 4] = (&transaction_bytes[0..4]).try_into().unwrap();
+    //Extract a slice of transaction_bytes
+    let mut bytes_slice = transaction_bytes.as_slice();
+    //Create a empty array
+    let mut buffer = [0; 4];
+    //Read and populate the buffer array with the bytes sliced.
+    bytes_slice.read(&mut buffer).unwrap();
     // Convert the array into bytes
-    u32::from_le_bytes(version_bytes)
+    u32::from_le_bytes(buffer)
 }
 #[allow(unused_variables)]
 fn main() {
